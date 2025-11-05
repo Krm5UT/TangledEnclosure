@@ -1,7 +1,7 @@
 void setup() {
   //Tangled Enclosure servo codes
   // Crystal is here
-  //Kattia was here
+  // Kattia was here
 }
 
 void loop() {
