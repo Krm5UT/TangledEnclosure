@@ -1,6 +1,12 @@
 #include <Servo.h>
 
-Servo myservo;  // create Servo object to control a servo
+Servo flowerServo;  // create Servo object to control a servo
+const int flowerButton;
+const int moonButton; 
+Servo hairServo;
+const int flynnButton;
+Servo gothelServo;
+const int sunButton;
 
 int pos = 0;    // variable to store the servo position
 int increment = 1;  // direction of movement (1 or -1)
@@ -8,7 +14,15 @@ unsigned long previousMillis = 0;  // stores last time servo was updated
 const long interval = 15;  // interval between updates (milliseconds)
 
 void setup() {
-  myservo.attach(9);  // attaches the servo on pin 9 to the Servo object
+  flowerServo.attach(2);  // attaches the servo on pin 9 to the Servo object
+  pinMode(flowerButton, INPUT)
+
+  hairServo.attach(5);
+  pinMode(flynnButton, INPUT)
+
+  gothelServo.attach(8);
+
+  pinMode(sunButton, INPUT)
 }
 
 void loop() {
@@ -19,7 +33,7 @@ void loop() {
     previousMillis = currentMillis;  // save the last time we updated
     
     // Update servo position
-    myservo.write(pos);
+    flowerServo.write(pos);
     
     // Move to next position
     pos += increment;
