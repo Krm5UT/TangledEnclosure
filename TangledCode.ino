@@ -8,9 +8,18 @@ int lastflowerButtState = 0;
 int flowerButtVal;
 bool flower = false;
 
-const int moonButton;
-Servo hairServo;
-const int flynnButton;
+const int moonButt;
+
+Servo hairServo;  // create Servo object to control a servo
+int flynnButt;
+const int flynnButtPin = 3;
+int flynnButtState = 0;
+int lastflynnButtState = 0;
+int flynnButtVal;
+bool flynn = false;
+
+
+
 Servo gothelServo;
 const int sunButton;
 
@@ -26,10 +35,10 @@ void setup() {
   flowerServo.attach(2);  // attaches the servo on pin 9 to the Servo object
   pinMode(flowerButt, INPUT);
 
-  // hairServo.attach(5);
-  // pinMode(flynnButt, INPUT);
+  hairServo.attach(4);
+  pinMode(flynnButt, INPUT);
 
-  // gothelServo.attach(8);
+  // gothelServo.attach(6);
 
   // pinMode(sunButton, INPUT);
 }
@@ -54,6 +63,29 @@ void loop() {
         flower = false;
       }
       lastflowerButtState = flowerButtState;  // Update inside the if block
+    }
+  }
+
+ void loop() {
+  flynnButtVal = digitalRead(flynnButtPin);
+  Serial.println(flynnButtVal);
+  flynnButtState = digitalRead(flynnButtPin);  // Read directly into flynnButtState
+  unsigned long currentMillis = millis();
+
+
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    if (flynnButtState != lastflynnButtState) {
+      if (flynnButtState == HIGH) {
+        Serial.println("MoonLanding affirmative");
+        flynnServo.write(45);
+        flynn = true;
+      } else {
+        flynnServo.write(0);
+        flynn = false;
+      }
+      lastflynnButtState = flynnButtState;  // Update inside the if block
     }
   }
 }
