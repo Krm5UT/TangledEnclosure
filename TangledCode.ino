@@ -1,181 +1,155 @@
 #include <Servo.h>
 
-Servo flowerServo;  // create Servo object to control a servo
-
-// int moonButt; // I believe this is a syntax mistake
-const int moonButtPin = 3;
-int moonButtState = 0;
-int lastmoonButtState = 0;
-bool moon = false;
-
+// Servo Objects
+Servo flowerServo;
 Servo gothelRunServo;
-
-// int flowerButt;
-const int flowerButtPin = 5;
-int flowerButtState = 0;
-int lastflowerButtState = 0;
-// int flowerButtVal;
-bool flower = false;
-
-Servo hairServo;  // create Servo object to control a servo
-
-// int flynnButt;
-const int flynnButtPin = 7;
-int flynnButtState = 0;
-int lastflynnButtState = 0;
-bool flynn = false;
-
+Servo hairServo;
 Servo gothelFallServo;
-
-// int hairButt;
-const int hairButtPin = 9;
-int hairButtState = 0;
-int lasthairButtState = 0;
-bool hair = false;
-
 Servo weddingServo;
 
-// int sunButt;
-const int sunButtPin = 11;
-int sunButtState = 0;
-int lastsunButtState = 0;
+// Servo Pins
+const int flowerServoPin = 2;
+const int gothelRunPin   = 4;
+const int hairServoPin   = 6;
+const int gothelFallPin  = 8;
+const int weddingServoPin = 10;
+
+// Button Pins (INPUT_PULLUP = pressed LOW)
+const int moonButtPin   = 3;
+const int flowerButtPin = 5;
+const int flynnButtPin  = 7;
+const int hairButtPin   = 9;
+const int sunButtPin    = 11;
+
+// Button Last States
+int lastMoonButtState;
+int lastFlowerButtState;
+int lastFlynnButtState;
+int lastHairButtState;
+int lastSunButtState;
+
+// Story Progress Flags
+bool moon = false;
+bool flower = false;
+bool flynn = false;
+bool hair = false;
 bool sun = false;
 
-
-// int pos = 0;                       // variable to store the servo position
-// int increment = 1;                 // direction of movement (1 or -1)
-// unsigned long previousMillis = 0;  // stores last time servo was updated
-// const long interval = 15;          // interval between updates (milliseconds)
+// Print "The End" Once
+bool printedEnd = false;
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Place moon into position");
-  
-  flowerServo.attach(2);  // attaches the servo on pin 2
-  pinMode(moonButtPin, INPUT); // lists corresponding button
 
-  gothelRunServo.attach(4);
-  pinMode(flowerButtPin, INPUT);
-    
-  hairServo.attach(6);
-  pinMode(flynnButtPin, INPUT);
+  // Enable Internal Pull-Ups
+  pinMode(moonButtPin, INPUT_PULLUP);
+  pinMode(flowerButtPin, INPUT_PULLUP);
+  pinMode(flynnButtPin, INPUT_PULLUP);
+  pinMode(hairButtPin, INPUT_PULLUP);
+  pinMode(sunButtPin, INPUT_PULLUP);
+
+  // Read Initial Button States
+  lastMoonButtState   = digitalRead(moonButtPin);
+  lastFlowerButtState = digitalRead(flowerButtPin);
+  lastFlynnButtState  = digitalRead(flynnButtPin);
+  lastHairButtState   = digitalRead(hairButtPin);
+  lastSunButtState    = digitalRead(sunButtPin);
   
-  gothelFallServo.attach(8);
-  pinMode(hairButtPin, INPUT);
-  
-  weddingServo.attach(10);
-  pinMode(sunButtPin, INPUT);
+  flowerServo.attach(flowerServoPin);
 }
 
 void loop() {
-  // flowerButtVal = digitalRead(moonButtPin); // for button testing purposes
-  // Serial.println(moonButtVal);
-  
-  flynnButtState = digitalRead(flynnButtPin);
-  hairButtState = digitalRead(hairButtPin);
-  sunButtState = digitalRead(sunButtPin);
-  
-  // unsigned long currentMillis = millis(); // unused millis
 
-  // First interaction
-  moonButtState = digitalRead(moonButtPin);  // Moon button reads directly into moon button state
-  if (moon == false) {
-    flowerServo.write(0); // Sets initial position
-  }
-  if (moonButtState != lastmoonButtState) {
-    if (moonButtState == HIGH) {
-      Serial.println("Night Falls");
-      flowerServo.write(45);
-      moon = true;
-    }
-  }
+  // FIRST INTERACTION: MOON
+  int moonState = digitalRead(moonButtPin);
 
-  // Second interaction (Requires the 1st to have happened)
-  if (moon == true) {
-    flowerButtState = digitalRead(flowerButtPin);
-    if (flower == false) {
-      gothelRunServo.write(0); // Sets initial position
-    }
-  }
-  if (flowerButtState != lastflowerButtState) {
-    if (flowerButtState == HIGH) {
-      Serial.println("The royal baby was snatched!");
-      gothelRunServo.write(45);
-      flower = true;
-    }
-  }
+  // Debug print to see what's happening
+  // Serial.print("Moon button state: ");
+  // Serial.println(moonState);
 
-// Third interaction (Requires the 2nd to have happened)
-  if (flower == true) {
-    flynnButtState = digitalRead(flynnButtPin);
-    if (flynn == false) {
-      hairServo.write(0); // Sets initial position
-    }
-  }
-  if (flynnButtState != lastflynnButtState) {
-    if (flynnButtState == HIGH) {
-      Serial.println("Rapunzel has let down her hair!");
-      hairServo.write(45);
-      flynn = true;
-    }
- }
+  // Detect LOW → HIGH
+  if (!moon && lastMoonButtState == LOW && moonState == HIGH) {
+     Serial.println("Night Falls TRIGGERED");
 
-// Fourth interaction (Requires the 3rd to have happened)
-  if (flynn == true) {
-    hairButtState = digitalRead(hairButtPin);
-    if (hair == false) {
-      gothelFallServo.write(0); // Sets initial position
-    }
-  }
-  if (hairButtState != lasthairButtState) {
-    if (hairButtState == HIGH) {
-      Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
-      gothelFallServo.write(45);
-      hair = true;
-    }
-  }
+     flowerServo.write(0);
+     delay(500);
+     flowerServo.detach();
 
-// Final/Fifth interaction (Requires the 4th to have happened)
-  if (hair == true) {
-    sunButtState = digitalRead(sunButtPin);
-    if (sun == false) {
-      weddingServo.write(0); // Sets initial position
-    }
-  }
-  if (sunButtState != lastsunButtState) {
-    if (sunButtState == HIGH) {
-      Serial.println("Rapunzel & Flynn are soon to be wed, and they live happily ever after.");
-      weddingServo.write(45);
-      sun = true;
-      }
-    }
-    
+     moon = true;
+     Serial.println("Place Flower into Position");
+   }
 
-  if (sun == true) { // If the final event has triggered = ends
-    Serial.println("The End!");
-  }
+   lastMoonButtState = moonState;
 
-  // updates last state to avoid retriggering
-  lastmoonButtState = moonButtState;
-  lastflowerButtState = flowerButtState;
-  lastflynnButtState = flynnButtState;
-  lasthairButtState = hairButtState;
-  lastsunButtState = sunButtState;
-}
+  // // SECOND INTERACTION: FLOWER/GOTHEL
+  // int flowerState = digitalRead(flowerButtPin);
+  // if (moon && !flower && lastFlowerButtState == HIGH && flowerState == LOW) {
+  //   Serial.println("The royal baby was snatched!");
 
-// Saving this vvv in case we need millis for coding but so far we do not
-  // if (currentMillis - previousMillis >= interval) {
-  //   previousMillis = currentMillis;
+  //   gothelRunServo.attach(gothelRunPin);
+  //   gothelRunServo.write(45);
+  //   delay(500);
+  //   gothelRunServo.detach();
 
-  //   if (moonButtState != lastmoonButtState) {
-  //     if (moonButtState == HIGH) {
-  //       Serial.println("MoonLanding affirmative");
-  //       flowerServo.write(45);
-  //       flower = true;
-  //     } else {
-  //       flowerServo.write(0);
-  //       moon = false;
-  //     }
-  //     lastmoonButtState = moonButtState;  // Update inside the if block
-  //   }
+  //   flower = true;
   // }
+  // lastFlowerButtState = flowerState;
+
+
+
+  // // THRID INTERACTION: FLYNN
+  // int flynnState = digitalRead(flynnButtPin);
+  // if (flower && !flynn && lastFlynnButtState == HIGH && flynnState == LOW) {
+  //   Serial.println("Rapunzel has let down her hair!");
+
+  //   hairServo.attach(hairServoPin);
+  //   hairServo.write(45);
+  //   delay(500);
+  //   hairServo.detach();
+
+  //   flynn = true;
+  // }
+  // lastFlynnButtState = flynnState;
+
+
+
+  // // FOURTH INTERACTION: HAIR CUT
+  // int hairState = digitalRead(hairButtPin);
+  // if (flynn && !hair && lastHairButtState == HIGH && hairState == LOW) {
+  //   Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
+
+  //   gothelFallServo.attach(gothelFallPin);
+  //   gothelFallServo.write(45);
+  //   delay(500);
+  //   gothelFallServo.detach();
+
+  //   hair = true;
+  // }
+  // lastHairButtState = hairState;
+
+
+
+  // // FIFTH INTERACTION: WEDDING
+  // int sunState = digitalRead(sunButtPin);
+  // if (hair && !sun && lastSunButtState == HIGH && sunState == LOW) {
+  //   Serial.println("Rapunzel & Flynn are soon to be wed, and they live happily ever after.");
+
+  //   weddingServo.attach(weddingServoPin);
+  //   weddingServo.write(45);
+  //   delay(500);
+  //   weddingServo.detach();
+
+  //   sun = true;
+  // }
+  // lastSunButtState = sunState;
+
+
+
+  // // PRINT END
+  // if (sun && !printedEnd) {
+  //   Serial.println("The End!");
+  //   printedEnd = true;
+  // }
+  
+}
