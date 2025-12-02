@@ -55,6 +55,8 @@ void setup() {
   lastFlynnButtState  = digitalRead(flynnButtPin);
   lastHairButtState   = digitalRead(hairButtPin);
   lastSunButtState    = digitalRead(sunButtPin);
+  
+  flowerServo.attach(flowerServoPin);
 }
 
 void loop() {
@@ -63,19 +65,19 @@ void loop() {
   int moonState = digitalRead(moonButtPin);
 
   // Debug print to see what's happening
-  Serial.print("Moon button state: ");
-  Serial.println(moonState);
+  // Serial.print("Moon button state: ");
+  // Serial.println(moonState);
 
-  // Detect HIGH → LOW
-  if (!moon && lastMoonButtState == HIGH && moonState == LOW) {
+  // Detect LOW → HIGH
+  if (!moon && lastMoonButtState == LOW && moonState == HIGH) {
      Serial.println("Night Falls TRIGGERED");
 
-     flowerServo.attach(flowerServoPin);
-     flowerServo.write(45);
+     flowerServo.write(0);
      delay(500);
      flowerServo.detach();
 
      moon = true;
+     Serial.println("Place Flower into Position");
    }
 
    lastMoonButtState = moonState;
