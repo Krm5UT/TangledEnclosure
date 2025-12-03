@@ -18,8 +18,8 @@ const int weddingServoPin = 10;
 const int moonButtPin   = 3;
 const int flowerButtPin = 5;
 const int flynnButtPin  = 7;
-const int hairButtPin   = 9;
-const int sunButtPin    = 11;
+const int hairButtPin   = 11;
+const int sunButtPin    = 9;
 
 // Button Last States
 int lastMoonButtState;
@@ -82,19 +82,22 @@ void loop() {
 
    lastMoonButtState = moonState;
 
-  // // SECOND INTERACTION: FLOWER/GOTHEL
-  // int flowerState = digitalRead(flowerButtPin);
-  // if (moon && !flower && lastFlowerButtState == HIGH && flowerState == LOW) {
-  //   Serial.println("The royal baby was snatched!");
+  // SECOND INTERACTION: FLOWER/GOTHEL
+  int flowerState = digitalRead(flowerButtPin);
 
-  //   gothelRunServo.attach(gothelRunPin);
-  //   gothelRunServo.write(45);
-  //   delay(500);
-  //   gothelRunServo.detach();
 
-  //   flower = true;
-  // }
-  // lastFlowerButtState = flowerState;
+  if (moon && !flower && lastFlowerButtState == LOW && flowerState == HIGH) {
+    Serial.println("The royal baby was snatched!");
+
+    gothelRunServo.attach(gothelRunPin);
+    gothelRunServo.write(100);
+    delay(500);
+    gothelRunServo.detach();
+
+    flower = true;
+  }
+
+  lastFlowerButtState = flowerState;
 
 
 
@@ -114,8 +117,24 @@ void loop() {
 
 
 
-  // // FOURTH INTERACTION: HAIR CUT
-  // int hairState = digitalRead(hairButtPin);
+//   // FOURTH INTERACTION: HAIR CUT
+//   int hairState = digitalRead(hairButtPin);
+
+//   // Debugging
+//   Serial.print("hair button state: ");
+//   Serial.println(hairState);
+
+//  if (!hair && lastHairButtState == LOW && hairState == HIGH) {
+//     Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
+
+//     gothelFallServo.attach(gothelFallPin);
+//     gothelFallServo.write(98);
+//     delay(500);
+//     gothelFallServo.detach();
+
+//     hair = true;
+//   }
+
   // if (flynn && !hair && lastHairButtState == HIGH && hairState == LOW) {
   //   Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
 
