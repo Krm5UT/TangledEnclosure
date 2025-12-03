@@ -57,6 +57,12 @@ void setup() {
   lastSunButtState    = digitalRead(sunButtPin);
   
   flowerServo.attach(flowerServoPin);
+
+  // Set Gothel Run servo to starting position
+  gothelRunServo.attach(gothelRunPin);
+  gothelRunServo.write(50);
+  delay(500);
+  gothelRunServo.detach();
 }
 
 void loop() {
@@ -90,7 +96,7 @@ void loop() {
     Serial.println("The royal baby was snatched!");
 
     gothelRunServo.attach(gothelRunPin);
-    gothelRunServo.write(100);
+    gothelRunServo.write(120);
     delay(500);
     gothelRunServo.detach();
 
@@ -101,19 +107,25 @@ void loop() {
 
 
 
-  // // THRID INTERACTION: FLYNN
-  // int flynnState = digitalRead(flynnButtPin);
-  // if (flower && !flynn && lastFlynnButtState == HIGH && flynnState == LOW) {
-  //   Serial.println("Rapunzel has let down her hair!");
 
-  //   hairServo.attach(hairServoPin);
-  //   hairServo.write(45);
-  //   delay(500);
-  //   hairServo.detach();
+  // THRID INTERACTION: FLYNN
+  int flynnState = digitalRead(flynnButtPin);
+  
+  // Debug print to see what's happening
+  Serial.print("Flynn button state: ");
+  Serial.println(flynnState);
+  
+  if (flower && !flynn && lastFlynnButtState == LOW && flynnState == HIGH) {
+    Serial.println("Rapunzel has let down her hair!");
 
-  //   flynn = true;
-  // }
-  // lastFlynnButtState = flynnState;
+    hairServo.attach(hairServoPin);
+    hairServo.write(45);
+    delay(500);
+    hairServo.detach();
+
+    flynn = true;
+  }
+  lastFlynnButtState = flynnState;
 
 
 
