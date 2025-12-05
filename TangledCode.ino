@@ -63,6 +63,21 @@ void setup() {
   gothelRunServo.write(50);
   delay(500);
   gothelRunServo.detach();
+
+    // Set Gothel Fall servo to starting position
+  gothelFallServo.attach(gothelFallPin);
+  gothelFallServo.write(90);
+  delay(500);
+  // gothelFallServo.write(180);
+  // delay(500);
+  gothelRunServo.detach();
+
+      // Set Wedding servo to starting position
+  weddingServo.attach(weddingServoPin);
+  weddingServo.write(75);
+  delay(500);
+  weddingServo.detach();
+
 }
 
 void loop() {
@@ -91,6 +106,10 @@ void loop() {
   // SECOND INTERACTION: FLOWER/GOTHEL
   int flowerState = digitalRead(flowerButtPin);
 
+    // Debug print to see what's happening
+  Serial.print("flower button state: ");
+  Serial.println(flowerState);
+
 
   if (moon && !flower && lastFlowerButtState == LOW && flowerState == HIGH) {
     Serial.println("The royal baby was snatched!");
@@ -110,10 +129,11 @@ void loop() {
 
   // THRID INTERACTION: FLYNN
   int flynnState = digitalRead(flynnButtPin);
+  flynn = true;
   
-  // Debug print to see what's happening
-  Serial.print("Flynn button state: ");
-  Serial.println(flynnState);
+  // // Debug print to see what's happening
+  // Serial.print("Flynn button state: ");
+  // Serial.println(flynnState);
   
   if (flower && !flynn && lastFlynnButtState == LOW && flynnState == HIGH) {
     Serial.println("Rapunzel has let down her hair!");
@@ -129,51 +149,46 @@ void loop() {
 
 
 
-//   // FOURTH INTERACTION: HAIR CUT
-//   int hairState = digitalRead(hairButtPin);
+  // FOURTH INTERACTION: HAIR CUT
+  int hairState = digitalRead(hairButtPin);
 
-//   // Debugging
-//   Serial.print("hair button state: ");
-//   Serial.println(hairState);
+  // Debugging
+  // Serial.print("hair button state: ");
+  // Serial.println(hairState);
 
-//  if (!hair && lastHairButtState == LOW && hairState == HIGH) {
-//     Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
+ if (flower && flynn && !hair && lastHairButtState == HIGH && hairState == LOW) {
+    Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
 
-//     gothelFallServo.attach(gothelFallPin);
-//     gothelFallServo.write(98);
-//     delay(500);
-//     gothelFallServo.detach();
+    gothelFallServo.attach(gothelFallPin);
+    gothelFallServo.write(180);
+    delay(500);
+    gothelFallServo.detach();
 
-//     hair = true;
-//   }
+    hair = true;
+  }
 
-  // if (flynn && !hair && lastHairButtState == HIGH && hairState == LOW) {
-  //   Serial.println("The hair has been cut! Mother Gothel screeches and falls from the tower!");
-
-  //   gothelFallServo.attach(gothelFallPin);
-  //   gothelFallServo.write(45);
-  //   delay(500);
-  //   gothelFallServo.detach();
-
-  //   hair = true;
-  // }
-  // lastHairButtState = hairState;
+  lastHairButtState = hairState;
 
 
 
-  // // FIFTH INTERACTION: WEDDING
-  // int sunState = digitalRead(sunButtPin);
-  // if (hair && !sun && lastSunButtState == HIGH && sunState == LOW) {
-  //   Serial.println("Rapunzel & Flynn are soon to be wed, and they live happily ever after.");
+  // FIFTH INTERACTION: WEDDING
+  int sunState = digitalRead(sunButtPin);
 
-  //   weddingServo.attach(weddingServoPin);
-  //   weddingServo.write(45);
-  //   delay(500);
-  //   weddingServo.detach();
+  // // Debug print to see what's happening
+  // Serial.print("Sun button state: ");
+  // Serial.println(sunState);
 
-  //   sun = true;
-  // }
-  // lastSunButtState = sunState;
+  if (hair && !sun && lastSunButtState == HIGH && sunState == LOW) {
+    Serial.println("Rapunzel & Flynn are soon to be wed, and they live happily ever after.");
+
+    weddingServo.attach(weddingServoPin);
+    weddingServo.write(75);
+    delay(500);
+    weddingServo.detach();
+
+    sun = true;
+  }
+  lastSunButtState = sunState;
 
 
 
