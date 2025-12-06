@@ -192,10 +192,10 @@ void loop() {
 
 
 
-  // // PRINT END
-  // if (sun && !printedEnd) {
-  //   Serial.println("The End!");
-  //   printedEnd = true;
-  // }
+  // PRINT END
+  if (sun && !printedEnd) {
+    Serial.println("The End!");
+    printedEnd = true;
+  }
   
 }
