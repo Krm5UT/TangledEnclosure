@@ -57,10 +57,14 @@ void setup() {
   lastSunButtState    = digitalRead(sunButtPin);
   
   flowerServo.attach(flowerServoPin);
+  // flowerServo.write(0);
+  // delay(500);
+  // flowerServo.detach();
+  
 
   // Set Gothel Run servo to starting position
   gothelRunServo.attach(gothelRunPin);
-  gothelRunServo.write(50);
+  gothelRunServo.write(65);
   delay(500);
   gothelRunServo.detach();
 
@@ -68,8 +72,6 @@ void setup() {
   gothelFallServo.attach(gothelFallPin);
   gothelFallServo.write(90);
   delay(500);
-  // gothelFallServo.write(180);
-  // delay(500);
   gothelRunServo.detach();
 
       // Set Wedding servo to starting position
@@ -106,9 +108,9 @@ void loop() {
   // SECOND INTERACTION: FLOWER/GOTHEL
   int flowerState = digitalRead(flowerButtPin);
 
-    // Debug print to see what's happening
-  Serial.print("flower button state: ");
-  Serial.println(flowerState);
+  //   // Debug print to see what's happening
+  // Serial.print("flower button state: ");
+  // Serial.println(flowerState);
 
 
   if (moon && !flower && lastFlowerButtState == LOW && flowerState == HIGH) {
