@@ -64,7 +64,7 @@ void setup() {
 
   // Set Gothel Run servo to starting position
   gothelRunServo.attach(gothelRunPin);
-  gothelRunServo.write(65);
+  gothelRunServo.write(120);
   delay(500);
   gothelRunServo.detach();
 
@@ -117,7 +117,7 @@ void loop() {
     Serial.println("The royal baby was snatched!");
 
     gothelRunServo.attach(gothelRunPin);
-    gothelRunServo.write(120);
+    gothelRunServo.write(65);
     delay(500);
     gothelRunServo.detach();
 
@@ -131,7 +131,6 @@ void loop() {
 
   // THRID INTERACTION: FLYNN
   int flynnState = digitalRead(flynnButtPin);
-  flynn = true;
   
   // // Debug print to see what's happening
   // Serial.print("Flynn button state: ");
